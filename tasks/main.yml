@@ -1,0 +1,31 @@
+- name: install packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - git
+    - build-essential
+    - automake
+    - fuse
+    - libfuse-dev
+    - libcurl4-openssl-dev
+    - libxml2-dev
+    - libssl-dev
+
+- name: clone source code
+  git:
+    repo: https://github.com/s3fs-fuse/s3fs-fuse.git
+    version: "{{ version }}"
+    dest: /usr/local/src/s3fs-fuse
+    accept_hostkey: yes
+
+- name: install s3fs
+  command: "{{ item }}"
+  args:
+    chdir: /usr/local/src/s3fs-fuse
+    creates: /usr/bin/s3fs
+  with_items:
+    - './autogen.sh'
+    - './configure --prefix=/usr'
+    - 'make'
+    - 'make install'
