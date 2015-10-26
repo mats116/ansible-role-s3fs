@@ -1,7 +1,7 @@
 - name: install packages
   apt:
     name: "{{ item }}"
-    state: latest
+    state: present
   with_items:
     - git
     - build-essential
@@ -15,7 +15,7 @@
 - name: clone source code
   git:
     repo: https://github.com/s3fs-fuse/s3fs-fuse.git
-    version: "{{ version }}"
+    version: "{{ s3fs_version }}"
     dest: /usr/local/src/s3fs-fuse
     accept_hostkey: yes
 
@@ -23,9 +23,9 @@
   command: "{{ item }}"
   args:
     chdir: /usr/local/src/s3fs-fuse
-    creates: /usr/bin/s3fs
+    creates: "{{ s3fs_install_dir }}/bin/s3fs"
   with_items:
-    - './autogen.sh'
-    - './configure --prefix=/usr'
-    - 'make'
-    - 'make install'
+    - "./autogen.sh"
+    - "./configure --prefix={{ s3fs_install_dir }}"
+    - "make"
+    - "make install"
