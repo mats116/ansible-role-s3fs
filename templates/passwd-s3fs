@@ -1,0 +1,1 @@
+{{ s3fs_api_key }}:{{ s3fs_secret_key }}
